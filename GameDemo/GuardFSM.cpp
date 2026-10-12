@@ -73,7 +73,7 @@ GuardFSM::GuardFSM() : FSM(), cheat(false)
 
 GuardFSM::~GuardFSM()
 {
-	//¿©±â Àß¸ø Áö¿ì´Âµí?
+	//ì—¬ê¸° ì˜ëª» ì§€ìš°ëŠ”ë“¯?
 	const int size = 151;
 
 	if (map)
@@ -95,7 +95,7 @@ void GuardFSM::Start()
 	{
 		grid = m_owner.lock()->GetResourceManager().lock()->GetMapInfo();
 
-		//ÀÏ´Ü test¿ë grid map
+		//ì¼ë‹¨ testìš© grid map
 		//grid = new int* [size];
 
 		/*for (int i = 0; i < size; i++)
@@ -109,7 +109,7 @@ void GuardFSM::Start()
 		}*/
 
 		visitMap = new bool* [size];
-		//³» °æ·Î¸¦ ÀúÀå
+		//ë‚´ ê²½ë¡œë¥¼ ì €ì¥
 		for (int i = 0; i < size; i++)
 		{
 			visitMap[i] = new bool[size];
@@ -121,7 +121,7 @@ void GuardFSM::Start()
 
 		map = new AstarNode * [size];
 
-		//³ëµåÀÇ Á¤º¸¸¦ ´ãÀ» ¼¼ºÎ ¸ÊÀ» ÃÊ±âÈ­Çß´Ù
+		//ë…¸ë“œì˜ ì •ë³´ë¥¼ ë‹´ì„ ì„¸ë¶€ ë§µì„ ì´ˆê¸°í™”í–ˆë‹¤
 		for (int i = 0; i < size; ++i)
 		{
 			map[i] = new AstarNode[size];
@@ -133,7 +133,6 @@ void GuardFSM::Start()
 		m_combackPoint = GetOwner().lock()->GetComponent<Transform>()->GetWorldPosition();
 		m_curPoint = GetOwner().lock()->GetComponent<Transform>()->GetWorldPosition();
 
-		//ÀÌ°Å °®°Å ÀÖ´Â°Å ¸Â³Ä?
 		m_guardStateList[Guard::idle] = std::make_shared<GuardIdle>(shared_from_this());
 		m_guardStateList[Guard::patrol] = std::make_shared<GuardPatrol>(shared_from_this());
 		m_guardStateList[Guard::chasing] = std::make_shared<GuardChasing>(shared_from_this());
@@ -143,25 +142,25 @@ void GuardFSM::Start()
 		m_guardStateList[Guard::comeback] = std::make_shared<GuardComeBack>(shared_from_this());
 		m_guardStateList[Guard::set] = std::make_shared<GuardSet>(shared_from_this());
 
-		// ¿¡µğÅÍ¿¡¼­ Á¶ÀÛ ÇÒ °æºñº´ ½ºÇÇµå
+		// ì—ë””í„°ì—ì„œ ì¡°ì‘ í•  ê²½ë¹„ë³‘ ìŠ¤í”¼ë“œ
 		m_guardSpeed = static_pointer_cast<GuardState>(m_guardStateList[Guard::idle])->GetMoveSpeed();
 
-		//ÀÌ°Å ¸Â³Ä?
 		std::vector<bool> idleTransition = { true,true, true, true, true, true, true,true };
-		m_transition.push_back(idleTransition);
 		std::vector<bool> patrolTransition = { true,true, true, true, true, true, false, true };
-		m_transition.push_back(patrolTransition);
 		std::vector<bool> chasingTransition = { true,false, true, false, true, true, false, false };
-		m_transition.push_back(chasingTransition);
 		std::vector<bool> calledTransition = { true,false, true, true, true, false, false,true };
-		m_transition.push_back(calledTransition);
 		std::vector<bool> searchTransition = { true,true, true, true, true, true, true,true };
-		m_transition.push_back(searchTransition);
 		std::vector<bool> fishingedTransition = { true,false, false, false, true, false, false,false };
-		m_transition.push_back(fishingedTransition);
 		std::vector<bool> comebackTransition = { true,true, true, true, true, true, true,true };
-		m_transition.push_back(comebackTransition);
 		std::vector<bool> setTransition = { false,false, true, false, false, false, false,true };
+		
+		m_transition.push_back(idleTransition);
+		m_transition.push_back(patrolTransition);
+		m_transition.push_back(chasingTransition);
+		m_transition.push_back(calledTransition);
+		m_transition.push_back(searchTransition);
+		m_transition.push_back(fishingedTransition);
+		m_transition.push_back(comebackTransition);
 		m_transition.push_back(setTransition);
 
 		m_curState = nullptr;
@@ -182,7 +181,7 @@ void GuardFSM::OnStateExit()
 
 void GuardFSM::Update(double dt)
 {
-	//¼ıÀÚ 1 Å°  ³ÑÆĞµå ¸»°í
+	//ìˆ«ì 1 í‚¤  ë„˜íŒ¨ë“œ ë§ê³ 
 	if (InputManager::GetInstance()->IsKeyDown(0x31))
 	{
 		cheat = !cheat;
@@ -292,7 +291,7 @@ void GuardFSM::ChangeState(Guard state)
 			static int count = 0;
 			m_preState = state;
 
-			// fsm Ãß°¡ÇÏ¸é °æ·Î°¡ 0ÀÎ »óÅÂ¿¡¼­ ¹è¿­¿¡ Á¢±ÙÇÏ¿© ÅÍÁö¹Ç·Î ÀÏ´Ü ¿¹¿ÜÃ³¸®
+			// fsm ì¶”ê°€í•˜ë©´ ê²½ë¡œê°€ 0ì¸ ìƒíƒœì—ì„œ ë°°ì—´ì— ì ‘ê·¼í•˜ì—¬ í„°ì§€ë¯€ë¡œ ì¼ë‹¨ ì˜ˆì™¸ì²˜ë¦¬
 			if (!m_patrolPath.empty())
 			{
 				Astar(m_patrolPath[count]);
@@ -321,8 +320,8 @@ std::shared_ptr<Component> GuardFSM::Clone() const
 {
 	std::shared_ptr<GuardFSM> clone = std::make_shared<GuardFSM>();
 
-	// ½Ã¸®¾ó¶óÀÌÁî json ¿¡¼­ ÅÍÁö¹Ç·Î ÁÖ¼® 
-	// Á÷Á¢ ±íÀº º¹»ç ÇÏÀÚ
+	// ì‹œë¦¬ì–¼ë¼ì´ì¦ˆ json ì—ì„œ í„°ì§€ë¯€ë¡œ ì£¼ì„ 
+	// ì§ì ‘ ê¹Šì€ ë³µì‚¬ í•˜ì
 	//clone->Start(); 
 
 	clone->m_curPoint = m_curPoint;
@@ -355,7 +354,7 @@ std::shared_ptr<Component> GuardFSM::Clone() const
 	{
 		clone->map = new AstarNode * [size];
 
-		//³ëµåÀÇ Á¤º¸¸¦ ´ãÀ» ¼¼ºÎ ¸ÊÀ» ÃÊ±âÈ­Çß´Ù
+		//ë…¸ë“œì˜ ì •ë³´ë¥¼ ë‹´ì„ ì„¸ë¶€ ë§µì„ ì´ˆê¸°í™”í–ˆë‹¤
 		for (int i = 0; i < size; ++i)
 		{
 			clone->map[i] = new AstarNode[size];
@@ -380,7 +379,7 @@ void GuardFSM::Astar(Vector3 goal)
 	Point startPoint = CalcPoint(m_curPoint);
 	Point destination = CalcPoint(goal);
 
-	//¸Ê ÃÊ±âÈ­
+	//ë§µ ì´ˆê¸°í™”
 	int size = 151;
 	for (int i = 0; i < size; i++)
 	{
@@ -414,7 +413,7 @@ void GuardFSM::Astar(Vector3 goal)
 	destination.first = destination.second;
 	destination.second = temp;
 
-	//½ÃÀÛÁ¡ÀÌ À¯È¿ÇÑ°¡
+	//ì‹œì‘ì ì´ ìœ íš¨í•œê°€
 	if (!IsValid(startPoint))
 	{
 		/*AllocConsole();
@@ -426,7 +425,7 @@ void GuardFSM::Astar(Vector3 goal)
 		return;
 	}
 
-	//¸ñÀûÁö°¡ À¯È¿ÇÑ°¡
+	//ëª©ì ì§€ê°€ ìœ íš¨í•œê°€
 	if (!IsValid(destination))
 	{
 		/*AllocConsole();
@@ -438,7 +437,7 @@ void GuardFSM::Astar(Vector3 goal)
 		return;
 	}
 
-	//½ÃÀÛÁ¡ÀÌ º®ÀÎ°¡?
+	//ì‹œì‘ì ì´ ë²½ì¸ê°€?
 	if (grid[static_cast<int>(m_curPoint.x)][static_cast<int>(m_curPoint.z)] == 1)
 	{
 		/*AllocConsole();
@@ -450,7 +449,7 @@ void GuardFSM::Astar(Vector3 goal)
 		return;
 	}
 
-	//¸ñÀûÁö°¡ º®ÀÎ°¡?
+	//ëª©ì ì§€ê°€ ë²½ì¸ê°€?
 	if (grid[static_cast<int>(destination.first)][static_cast<int>(destination.second)] == 1)
 	{
 		/*AllocConsole();
@@ -462,13 +461,13 @@ void GuardFSM::Astar(Vector3 goal)
 		return;
 	}
 
-	//½ÃÀÛÁ¡°ú ¸ñÀûÁö°¡ ÀÌ¹Ì µ¿ÀÏÇÑ°¡?
+	//ì‹œì‘ì ê³¼ ëª©ì ì§€ê°€ ì´ë¯¸ ë™ì¼í•œê°€?
 	if (startPoint == destination)
 	{
 		return;
 	}
 
-	//½ÃÀÛÁ¡ ¼¼ÆÃ
+	//ì‹œì‘ì  ì„¸íŒ…
 	map[startPoint.first][startPoint.second].pos = startPoint;
 	map[startPoint.first][startPoint.second].isStart = true;
 	map[startPoint.first][startPoint.second].G = 0;
@@ -476,18 +475,18 @@ void GuardFSM::Astar(Vector3 goal)
 
 	visitMap[startPoint.first][startPoint.second] = true;
 
-	//¸ñÀûÁö ¼¼ÆÃ
+	//ëª©ì ì§€ ì„¸íŒ…
 	map[destination.first][destination.second].pos = destination;
 	map[destination.first][destination.second].isDestinaition = true;
 
 	AstarNode startNode = map[startPoint.first][startPoint.second];
 	AstarNode destinationNode = map[destination.first][destination.second];
 
-	//¹æÇâ
+	//ë°©í–¥
 	int dirX[] = { -1,0,1 };
 	int dirY[] = { -1,0,1 };
 
-	std::set<AstarNode> calcPath; //Å½»öÀ» ÇÏ¸é¼­ ÀúÀåÇØ³ù´ø °æ·Îµé Å½»öÁß °æ·Î°¡ ¸·È÷¸é ´ÙÀ½ °æ·Î¸¦ Å½»öÇÏ±âÀ§ÇØ ÀúÀåÇÑ´Ù
+	std::set<AstarNode> calcPath; //íƒìƒ‰ì„ í•˜ë©´ì„œ ì €ì¥í•´ë†¨ë˜ ê²½ë¡œë“¤ íƒìƒ‰ì¤‘ ê²½ë¡œê°€ ë§‰íˆë©´ ë‹¤ìŒ ê²½ë¡œë¥¼ íƒìƒ‰í•˜ê¸°ìœ„í•´ ì €ì¥í•œë‹¤
 	calcPath.clear();
 	calcPath.insert(map[startPoint.first][startPoint.second]);
 
@@ -503,26 +502,26 @@ void GuardFSM::Astar(Vector3 goal)
 
 	while (!calcPath.empty())
 	{
-		//ÀÌÀü À§Ä¡¿¡¼­ ÇöÀçÀ§Ä¡°¡ ºñ¿ëÀÌ °¡Àå Àú·Å
+		//ì´ì „ ìœ„ì¹˜ì—ì„œ í˜„ì¬ìœ„ì¹˜ê°€ ë¹„ìš©ì´ ê°€ì¥ ì €ë ´
 		AstarNode curPos = *calcPath.begin();
 
-		//ÇØ´ç À§Ä¡¸¦ ¹æ¹®
+		//í•´ë‹¹ ìœ„ì¹˜ë¥¼ ë°©ë¬¸
 		visitMap[curPos.pos.first][curPos.pos.second] = true;
 
-		//ÀÌ °æ·Î¸¦ Å½»öÇØ º¸°Ú´Ù ±×·¡¼­ ÇØ´ç °æ·Î¸¦ ÁöÁ¤Çß±â¶§¹®¿¡ ´ÙÀ½ Å½»ö½Ã Å½»ö ¸ñ·Ï¿¡¼­ ¾ø¾î¾ßÇÑ´Ù
+		//ì´ ê²½ë¡œë¥¼ íƒìƒ‰í•´ ë³´ê² ë‹¤ ê·¸ë˜ì„œ í•´ë‹¹ ê²½ë¡œë¥¼ ì§€ì •í–ˆê¸°ë•Œë¬¸ì— ë‹¤ìŒ íƒìƒ‰ì‹œ íƒìƒ‰ ëª©ë¡ì—ì„œ ì—†ì–´ì•¼í•œë‹¤
 		calcPath.erase(calcPath.begin());
 
-		//º®ÀÌ ¾Æ´Ñ ÇöÀç À§Ä¡¿¡¼­ ÁøÇà ÇÒ ¼ö ÀÖ´Â ³ëµåÀÇ F ¸¦ ±¸ÇØ ÁøÇàÇÒ ³ëµå¸¦ Ã£ÀÚ
+		//ë²½ì´ ì•„ë‹Œ í˜„ì¬ ìœ„ì¹˜ì—ì„œ ì§„í–‰ í•  ìˆ˜ ìˆëŠ” ë…¸ë“œì˜ F ë¥¼ êµ¬í•´ ì§„í–‰í•  ë…¸ë“œë¥¼ ì°¾ì
 		for (int i = 0; i < 3; i++)
 		{
 			for (int j = 0; j < 3; j++)
 			{
 				Point calcPos = Point(curPos.pos.first + dirY[i], curPos.pos.second + dirX[j]);
-				//³ëµåÀÇ ÁøÇà¹æÇâÀÌ À¯È¿ÇÑ ¹üÀ§ÀÎ°¡?
+				//ë…¸ë“œì˜ ì§„í–‰ë°©í–¥ì´ ìœ íš¨í•œ ë²”ìœ„ì¸ê°€?
 				if (IsValid(calcPos))
 				{
-					//ÁøÇà¹æÇâ¿¡ ¸ñÀûÁö°¡ Á¸ÀçÇÏ´Â°¡? 
-					//´ë°¢¼±À¸·Îµµ Á¢±ÙÇÒ ¼öµµ ÀÖ°í Á÷ÁøÀ¸·Îµµ Á¢±ÙÀÌ µÇ´Âµ¥ Áö±İ set¿¡ Ã³À½ ¸ñÀûÁö¸¦ Ã£¾Æ¹ö¸®¸é µÚ¿¡²¨ °è»ê ¾ÈÇÔ
+					//ì§„í–‰ë°©í–¥ì— ëª©ì ì§€ê°€ ì¡´ì¬í•˜ëŠ”ê°€? 
+					//ëŒ€ê°ì„ ìœ¼ë¡œë„ ì ‘ê·¼í•  ìˆ˜ë„ ìˆê³  ì§ì§„ìœ¼ë¡œë„ ì ‘ê·¼ì´ ë˜ëŠ”ë° ì§€ê¸ˆ setì— ì²˜ìŒ ëª©ì ì§€ë¥¼ ì°¾ì•„ë²„ë¦¬ë©´ ë’¤ì—êº¼ ê³„ì‚° ì•ˆí•¨
 					if (calcPos == destination)
 					{
 #ifdef _DEBUG			
@@ -540,7 +539,7 @@ void GuardFSM::Astar(Vector3 goal)
 #endif
 						findDestination = true;
 
-						//°æ·Î ÃÊ±âÈ­
+						//ê²½ë¡œ ì´ˆê¸°í™”
 						if (!m_path.empty())
 						{
 							while (!m_path.empty())
@@ -552,7 +551,7 @@ void GuardFSM::Astar(Vector3 goal)
 						map[destination.first][destination.second].preNode = curPos.pos;
 						destination = calcPos;
 
-						//ÃÖÁ¾ °æ·Î ÀúÀå
+						//ìµœì¢… ê²½ë¡œ ì €ì¥
 						do
 						{
 							m_path.push(map[destination.first][destination.second]);
@@ -566,7 +565,7 @@ void GuardFSM::Astar(Vector3 goal)
 						return;
 					}
 
-					//º®ÀÌ ¾Æ´Ï°í Áö³ª°£Àû ¾ø´Â ³ëµåÀÎ°¡?
+					//ë²½ì´ ì•„ë‹ˆê³  ì§€ë‚˜ê°„ì  ì—†ëŠ” ë…¸ë“œì¸ê°€?
 					if (visitMap[calcPos.first][calcPos.second] == false && grid[calcPos.first][calcPos.second] != 1)
 					{
 						double g = 0;
@@ -575,33 +574,33 @@ void GuardFSM::Astar(Vector3 goal)
 
 						if (i % 2 == 0 && j % 2 == 0)
 						{
-							//´ë°¢¼± ¿òÁ÷ÀÏ¶§
+							//ëŒ€ê°ì„  ì›€ì§ì¼ë•Œ
 							g = map[CurNode.pos.first][CurNode.pos.second].G + 1.414;
 							h = CalcHuristic(calcPos, destination);
 							f = h + g;
 						}
 						else
 						{
-							//ÀÌ°Ç Á÷ÁøÀ¸·Î ¿òÁ÷ÀÏ¶§
+							//ì´ê±´ ì§ì§„ìœ¼ë¡œ ì›€ì§ì¼ë•Œ
 							g = map[CurNode.pos.first][CurNode.pos.second].G + 1;
 							h = CalcHuristic(calcPos, destination);
 							f = h + g;
 						}
 
-						//°è»êÇÑ °æ·Î°¡ ÇÑ¹øµµ °è»êµÈ ÀûÀÌ ¾ø´Â°¡?
-						//ÀÌ¹Ì °è»êµÇ¾î ÀÖ´Ù¸é ±âÁ¸ÀÇ f °ªº¸´Ù ÀÛÀº°¡?
-						//¿©±â¼­ g °ªÀÌ Á¦´ë·Î °»½ÅÀÌ ¾ÈµÇ°í ÀÖ´Â°Å°°´Ù g °ªÀÌ ¾È¿Ã¶ó°¡
+						//ê³„ì‚°í•œ ê²½ë¡œê°€ í•œë²ˆë„ ê³„ì‚°ëœ ì ì´ ì—†ëŠ”ê°€?
+						//ì´ë¯¸ ê³„ì‚°ë˜ì–´ ìˆë‹¤ë©´ ê¸°ì¡´ì˜ f ê°’ë³´ë‹¤ ì‘ì€ê°€?
+						//ì—¬ê¸°ì„œ g ê°’ì´ ì œëŒ€ë¡œ ê°±ì‹ ì´ ì•ˆë˜ê³  ìˆëŠ”ê±°ê°™ë‹¤ g ê°’ì´ ì•ˆì˜¬ë¼ê°€
 						if (map[calcPos.first][calcPos.second].F == DBL_MAX
 							|| map[calcPos.first][calcPos.second].F > f)
 						{
-							//ºñ¿ë°è»ê
+							//ë¹„ìš©ê³„ì‚°
 							map[calcPos.first][calcPos.second].pos = calcPos;
-							map[calcPos.first][calcPos.second].G = g; //¿©±â¼­ ºÎ¸ğ³ëµåÀÇ g °ªÀÌ Á¦´ë·Î ¾È´õÇØÁü - ÇØ°á
+							map[calcPos.first][calcPos.second].G = g; //ì—¬ê¸°ì„œ ë¶€ëª¨ë…¸ë“œì˜ g ê°’ì´ ì œëŒ€ë¡œ ì•ˆë”í•´ì§ - í•´ê²°
 							map[calcPos.first][calcPos.second].H = h;
 							map[calcPos.first][calcPos.second].F = f;
 							map[calcPos.first][calcPos.second].preNode = Point(curPos.pos.first, curPos.pos.second);
 
-							//Å½»öÇÏ¸é¼­ ±âÁ¸¿¡ ÀÖ´ø ºñ¿ë, »õ·Î¿î °æ·ÎµéÀ»  °»½ÅÇÏ°Ú´Ù
+							//íƒìƒ‰í•˜ë©´ì„œ ê¸°ì¡´ì— ìˆë˜ ë¹„ìš©, ìƒˆë¡œìš´ ê²½ë¡œë“¤ì„  ê°±ì‹ í•˜ê² ë‹¤
 							calcPath.insert(map[calcPos.first][calcPos.second]);
 						}
 					}
@@ -609,7 +608,7 @@ void GuardFSM::Astar(Vector3 goal)
 			}
 		}
 
-		//ÀÌ°Ô ¹®Á¦´Ù - G°ªÀÌ °è¼Ó 0À¸·Î ´õÇÏ´Â ¹®Á¦ ¾î¶»°Ô ÇØ¾ßÇÒ±î?
+		//ì´ê²Œ ë¬¸ì œë‹¤ - Gê°’ì´ ê³„ì† 0ìœ¼ë¡œ ë”í•˜ëŠ” ë¬¸ì œ ì–´ë–»ê²Œ í•´ì•¼í• ê¹Œ?
 		//CurNode = map[curPos.first][curPos.second];
 	}
 
@@ -644,7 +643,7 @@ bool GuardFSM::IsValid(Point point)
 
 double GuardFSM::CalcHuristic(Point pos, Point destination)
 {
-	//À¯Å¬¸®µå
+	//ìœ í´ë¦¬ë“œ
 	return  sqrt(pow((pos.first - destination.first), 2) + pow((pos.second - destination.second), 2));
 }
 
