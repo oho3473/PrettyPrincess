@@ -43,6 +43,7 @@ https://github.com/user-attachments/assets/92a9274e-2271-46aa-a96a-bd1e23c1908c
 경비병은 플레이어를 감지하면 NPC상태가  Idle → Targeting→ Chasing으로 전환되며 행동합니다
 <br>
 
+<p align="center">
 <img width="669" height="294" alt="image" src="https://github.com/user-attachments/assets/88969d9e-43ed-45f8-b15d-dc7a5bf8a213" />
-
+</p>
 
