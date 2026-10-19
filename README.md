@@ -31,7 +31,7 @@ https://github.com/user-attachments/assets/92a9274e-2271-46aa-a96a-bd1e23c1908c
 | PlayerState | PlayerIdle, PlayerEat, PlayerHide, PlayerThrow , PlayeRun |
 | ShopKeeperState | ShopKeeperIdle, ShopKeeperIdle, ShopKeeperDoubt |
 | GuardState | GuardPatrol, GuardPatrol, GuardCalled, GuardFishing, GuardComeBack, GuardSet|
-| [FSM 상태 머신](/GameDemo/FSM.cpp#L13C1-L44C2)) | State의 등록, 전환 및 관리를 담당 |
+| [FSM 상태 머신](/GameDemo/FSM.cpp#L13C1-L44C2) | State의 등록, 전환 및 관리를 담당 |
 
 ### 2. 플레이어 감지
 
