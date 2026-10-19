@@ -30,11 +30,14 @@ https://github.com/user-attachments/assets/92a9274e-2271-46aa-a96a-bd1e23c1908c
 | PlayerState | PlayerIdle, PlayerEat, PlayerHide, PlayerThrow , PlayeRun |
 | ShopKeeperState | ShopKeeperIdle, ShopKeeperIdle, ShopKeeperDoubt |
 | GuardState | GuardPatrol, GuardPatrol, GuardCalled, GuardFishing, GuardComeBack, GuardSet|
-| [](/GameDemo/FSM.cpp#L13C1-L44C2)) | State의 등록, 전환 및 관리를 담당 |
+| [FSM 상태 머신](/GameDemo/FSM.cpp#L13C1-L44C2)) | State의 등록, 전환 및 관리를 담당 |
 
 ### 2. [플레이어 감지]()
 <img width="426" height="240" alt="Video Project 6" src="https://github.com/user-attachments/assets/408ea649-0ba0-40ea-b7cd-57bb61d6517d" />
+
+<br>
 경비병은 플레이어를 감지하면 NPC상태가  Idle → Targeting→ Chasing으로 전환되며 행동합니다
+<br>
 
 <img width="669" height="294" alt="image" src="https://github.com/user-attachments/assets/88969d9e-43ed-45f8-b15d-dc7a5bf8a213" />
 
