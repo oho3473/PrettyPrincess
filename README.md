@@ -17,8 +17,9 @@ https://github.com/user-attachments/assets/92a9274e-2271-46aa-a96a-bd1e23c1908c
 
 ### 1. [NPC의 상태 설계 및 행동 구현](./GameDemo/State.h#L47C1-L70C3)
 
+<p align="center">
 <img width="426" height="240" alt="Video Project 1 (2)" src="https://github.com/user-attachments/assets/6b2235aa-eb9c-41b4-8cdb-cb071b34e40a" />
-
+</p>
 
 각 상태의 실제 동작은 State를 상속한 개별 클래스에서 처리하여 분리 및 FSM은 상태의 등록, 전환, 생명주기 호출만 담당하도록 구현했습니다.<br>
 
@@ -32,8 +33,11 @@ https://github.com/user-attachments/assets/92a9274e-2271-46aa-a96a-bd1e23c1908c
 | GuardState | GuardPatrol, GuardPatrol, GuardCalled, GuardFishing, GuardComeBack, GuardSet|
 | [FSM 상태 머신](/GameDemo/FSM.cpp#L13C1-L44C2)) | State의 등록, 전환 및 관리를 담당 |
 
-### 2. [플레이어 감지]()
+### 2. 플레이어 감지
+
+<p align="center">
 <img width="426" height="240" alt="Video Project 6" src="https://github.com/user-attachments/assets/408ea649-0ba0-40ea-b7cd-57bb61d6517d" />
+</p>
 
 <br>
 경비병은 플레이어를 감지하면 NPC상태가  Idle → Targeting→ Chasing으로 전환되며 행동합니다
