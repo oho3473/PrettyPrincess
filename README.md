@@ -47,3 +47,8 @@ https://github.com/user-attachments/assets/92a9274e-2271-46aa-a96a-bd1e23c1908c
 <img width="669" height="294" alt="image" src="https://github.com/user-attachments/assets/88969d9e-43ed-45f8-b15d-dc7a5bf8a213" />
 </p>
 
+<p align="center">
+<img width="426" height="240" alt="Video Project 7" src="https://github.com/user-attachments/assets/3a1bda76-c57c-4db1-ad4d-e7154999eb43" />
+</p>
+플레이어 감지시 A*알고리즘을 활용하여 (플레이어-경비병) 경로를 생성하고 플레이어 추격을 구현했습니다.
+
